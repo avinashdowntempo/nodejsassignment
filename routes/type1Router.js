@@ -7,7 +7,7 @@ let given = [31, 32, 43, 23, 4, 8];
 let expected = [43, 4, 31, 8, 23, 32];
 
 /* GET type1 result. */
-router.post('/', function (req, res, next) {
+router.post('/', (req, res, next) => {
   const {
     input
   } = req.body;

@@ -7,7 +7,7 @@ let given = "ab,c#de@,'$%fgh*";
 let expected = "hg,f#ed@,'$%cba*";
 
 /* GET type2 results. */
-router.post('/', function (req, res, next) {
+router.post('/', (req, res, next) => {
   const {
     input
   } = req.body;
@@ -40,10 +40,12 @@ function fixSpecialChar(word) {
     symbols
   }
 }
+
 function sort(array) {
   array.sort((a, b) => a - b);
   return array;
 }
+
 function rebuildString(alpha, symbols) {
   let result = '';
   count = alpha.length - 1;
