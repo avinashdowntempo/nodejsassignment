@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const debug = require('debug')('nodejs-assignment:login');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const debug = require('debug')('nodejs-assignment:login');
+const secret = require('../config/keys');
+
 
 /* GET login token. */
 function route(UserModel) {
@@ -39,7 +41,7 @@ function route(UserModel) {
                         jwt.sign({
                             userName,
                             userEmail
-                        }, 'secret', (err, token) => {
+                        }, secret, (err, token) => {
                             if (err) {
                                 debug(`error generating token`);
                             }
