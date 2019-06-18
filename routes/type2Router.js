@@ -1,5 +1,5 @@
 const express = require('express');
-const debug = require('debug')('nodejs-assignment:server');
+const debug = require('debug')('nodejs-assignment:type2');
 const router = express.Router();
 const bodyParser = require('body-parser');
 

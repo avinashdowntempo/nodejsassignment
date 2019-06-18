@@ -3,11 +3,12 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const debug = require('debug')('nodejs-assignment:app');
 const mongoose = require('mongoose');
 
-const db = mongoose.connect('mongodb://ds239157.mlab.com:39157/nodejsassignment', {
+const db = mongoose.connect('mongodb://localhost:27017/nodeassignment', {
   useNewUrlParser: true
-});
+}).then(() => debug(`connected to MongoDB`)).catch((err) => debug(`Failed to connect to MongoDB`));
 const Login = require('./models/loginModel');
 const Signup = require('./models/signupModel');
 

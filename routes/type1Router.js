@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const debug = require('debug')('nodejs-assignment:server');
+const debug = require('debug')('nodejs-assignment:type1');
 const bodyParser = require('body-parser');
 
 let given = [31, 32, 43, 23, 4, 8];
 let expected = [43, 4, 31, 8, 23, 32];
 
 /* GET type1 result. */
-router.post('/', (req, res, next) => {
+router.post('/', verifyToken, (req, res, next) => {
   const {
     input
   } = req.body;
