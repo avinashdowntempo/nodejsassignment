@@ -1,66 +1,32 @@
 const express = require('express');
 const router = express.Router();
 const debug = require('debug')('nodejs-assignment:login');
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const secret = require('../config/keys');
-
+const validateAuthFields = require('../middleware/validateAuthFields');
+const validateLoginUser = require('../middleware/validateLoginUser');
+const validatePassword = require('../middleware/validatePassword');
 
 /* GET login token. */
 function route(UserModel) {
-    router.post('/', (req, res, next) => {
+    router.post('/', validateAuthFields, validateLoginUser(UserModel), validatePassword, (req, res, next) => {
         const {
             userName,
             userEmail,
-            password
         } = req.body;
-        if (!userName || !userEmail || !password) {
-            res.status(400).json({
-                message: 'fields are Invalid',
-            });
-        }
-        UserModel.findOne({
+
+        jwt.sign({
+            userName,
             userEmail
-        }, (err, user) => {
+        }, secret, (err, token) => {
             if (err) {
-                debug(`error`);
-                res.status(400).json({
-                    error: err,
-                });
-            } else if (!user) {
-                debug(`user doesnt exist`);
-                res.status(400).json({
-                    message: 'User Does Not Exist',
-                });
-            } else {
-
-                bcrypt.compare(password, user.password, (err, valid) => {
-                    // res == true
-                    if (valid) {
-                        debug(`valid password`);
-                        jwt.sign({
-                            userName,
-                            userEmail
-                        }, secret, (err, token) => {
-                            if (err) {
-                                debug(`error generating token`);
-                            }
-                            debug(`sending json`);
-                            res.json({
-                                token
-                            });
-                        });
-                    } else {
-                        res.status(401).json({
-                            error: "invalid Password"
-                        });
-                    }
-                });
-
+                debug(`error generating token`);
             }
+            debug(`sending token`);
+            res.json({
+                token
+            });
         });
-
-
 
     });
     return router;

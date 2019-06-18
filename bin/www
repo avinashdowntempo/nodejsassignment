@@ -2,21 +2,26 @@
 
 const debug = require('debug')('nodejs-assignment:server');
 const cluster = require('cluster');
-
+let retrydead = 0;
 cluster.on('exit', (worker) => {
   // Replace the dead worker,
   // we're not sentimental
-  console.log(`worker ${worker.id} died`);
-  cluster.fork();
+  retrydead++;
+  if (retrydead < 10) {
+    console.log();
+    debug(`worker ${worker.id} died`);
+    cluster.fork();
+  }
 
 });
 // Code to run if we're in the master process
 if (cluster.isMaster) {
-
-  var cpuCount = require('os').cpus().length;
+  let cores = require('os').cpus().length;
+  debug(`available cores ${cores}`);
 
   // Create a worker for each CPU
-  for (var i = 0; i < cpuCount; i += 1) {
+  for (let i = 0; i < cores; i += 1) {
+    debug(`creating new worker process`);
     cluster.fork();
   }
 

@@ -1,14 +1,14 @@
 const express = require('express');
 const debug = require('debug')('nodejs-assignment:type2');
 const router = express.Router();
-const bodyParser = require('body-parser');
+const validateInput = require('../middleware/validateInput');
 
 let given = "ab,c#de@,'$%fgh*";
 let expected = "hg,f#ed@,'$%cba*";
 
 /* GET type2 results. */
 function route() {
-  router.post('/', (req, res, next) => {
+  router.post('/', validateInput, (req, res, next) => {
     const {
       input
     } = req.body;

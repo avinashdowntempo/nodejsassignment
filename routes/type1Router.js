@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const debug = require('debug')('nodejs-assignment:type1');
-const bodyParser = require('body-parser');
+
 const cluster = require('cluster');
+const validateInput = require('../middleware/validateInput');
 
 let given = [31, 32, 43, 23, 4, 8];
 let expected = [43, 4, 31, 8, 23, 32];
@@ -10,7 +11,7 @@ let expected = [43, 4, 31, 8, 23, 32];
 /* GET type1 result. */
 
 function route() {
-  router.post('/', (req, res, next) => {
+  router.post('/', validateInput, (req, res, next) => {
     const {
       input
     } = req.body;
