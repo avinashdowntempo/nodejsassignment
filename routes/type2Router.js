@@ -7,21 +7,24 @@ let given = "ab,c#de@,'$%fgh*";
 let expected = "hg,f#ed@,'$%cba*";
 
 /* GET type2 results. */
-router.post('/', (req, res, next) => {
-  const {
-    input
-  } = req.body;
-  let {
-    alpha,
-    symbols
-  } = fixSpecialChar(input);
-  debug(`alpha ${alpha} symbols ${symbols}`);
-  let result = rebuildString(alpha, symbols);
-  debug(`reult ${result}`);
-  res.json({
-    "result": result
+function route() {
+  router.post('/', (req, res, next) => {
+    const {
+      input
+    } = req.body;
+    let {
+      alpha,
+      symbols
+    } = fixSpecialChar(input);
+    debug(`alpha ${alpha} symbols ${symbols}`);
+    let result = rebuildString(alpha, symbols);
+    debug(`reult ${result}`);
+    res.json({
+      "result": result
+    });
   });
-});
+  return router;
+}
 
 function fixSpecialChar(word) {
   alpha = [];
@@ -60,4 +63,4 @@ function rebuildString(alpha, symbols) {
   return result;
 }
 
-module.exports = router;
+module.exports = route();

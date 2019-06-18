@@ -2,32 +2,37 @@ const express = require('express');
 const router = express.Router();
 const debug = require('debug')('nodejs-assignment:type1');
 const bodyParser = require('body-parser');
+const cluster = require('cluster');
 
 let given = [31, 32, 43, 23, 4, 8];
 let expected = [43, 4, 31, 8, 23, 32];
 
 /* GET type1 result. */
-router.post('/', verifyToken, (req, res, next) => {
-  const {
-    input
-  } = req.body;
-  let sorted = sort(input);
-  let {
-    odd,
-    even
-  } = getOddEven(sorted);
 
-  let result = mergeOddEven(odd, even);
+function route() {
+  router.post('/', (req, res, next) => {
+    const {
+      input
+    } = req.body;
+    let sorted = sort(input);
+    let {
+      odd,
+      even
+    } = getOddEven(sorted);
 
-  debug(`sorted string ${sorted}`);
-  debug(`odd string ${odd}`);
-  debug(`even string ${even}`);
-  debug(`result ${result}`);
+    let result = mergeOddEven(odd, even);
 
-  res.json({
-    "result": result
+    debug(`sorted string ${sorted} worker id ${cluster.worker.id}`);
+    debug(`odd string ${odd} worker id ${cluster.worker.id}`);
+    debug(`even string ${even} worker id ${cluster.worker.id}`);
+    debug(`result ${result} worker id ${cluster.worker.id}`);
+
+    res.json({
+      "result": result
+    });
   });
-});
+  return router;
+}
 
 function getOddEven(array) {
   let odd = [];
@@ -52,10 +57,18 @@ function sort(array) {
 
 function mergeOddEven(odd, even) {
   result = [];
-  for (let i = 0; i < odd.length; i++) {
-    result.push(odd[i], even[i]);
+  const loop = Math.max(odd.length, even.length);
+  debug(`loop length ${loop} worker id ${cluster.worker.id}`);
+  for (let i = 0; i < loop; i++) {
+    if (odd[i]) {
+      result.push(odd[i]);
+    }
+    if (even[i]) {
+      result.push(even[i]);
+    }
   }
+
   return result;
 }
 
-module.exports = router;
+module.exports = route();

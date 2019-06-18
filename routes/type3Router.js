@@ -7,16 +7,19 @@ let given = [1, 3, 4, 7, 9, 10];
 let expected = [2, 5, 6, 8]
 
 /* GET type3 results */
-router.post('/', (req, res, next) => {
-    const {
-        input
-    } = req.body;
-    let sortedArray = sort(input);
-    let result = getMissingNumber(sortedArray);
-    res.json({
-        "result": result
+function route() {
+    router.post('/', (req, res, next) => {
+        const {
+            input
+        } = req.body;
+        let sortedArray = sort(input);
+        let result = getMissingNumber(sortedArray);
+        res.json({
+            "result": result
+        });
     });
-});
+    return router;
+}
 
 function sort(array) {
     array.sort((a, b) => a - b);
@@ -36,4 +39,4 @@ function getMissingNumber(array) {
     return result;
 }
 
-module.exports = router;
+module.exports = route();
