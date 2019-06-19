@@ -3,18 +3,20 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const cluster = require('cluster');
 const debug = require('debug')('nodejs-assignment:app');
 const mongoose = require('mongoose');
 const dbURL = require('./config/db');
 const passport = require("passport");
 
+//connecting to database
 const db = mongoose.connect(dbURL, {
   useNewUrlParser: true
-}).then(() => debug(`connected to MongoDB`)).catch((err) => debug(`Failed to connect to MongoDB`));
+}).then(() => debug(`connected to MongoDB  :worker id ${cluster.worker.id}`)).catch((err) => debug(`Failed to connect to MongoDB  :worker id ${cluster.worker.id}`));
 mongoose.Promise = global.Promise;
 
 const User = require('./models/userModel');
-
+const base = "/api/v1"
 require('./auth/auth');
 
 const type1Router = require('./routes/type1Router');
@@ -31,13 +33,14 @@ app.use(express.urlencoded({
   extended: false
 }));
 
-app.use('/type1', passport.authenticate('jwt', {
+//authenticating routes with JWT for type1,type2,type3
+app.use(base + '/type1', passport.authenticate('jwt', {
   session: false
 }), type1Router);
-app.use('/type2', passport.authenticate('jwt', {
+app.use(base + '/type2', passport.authenticate('jwt', {
   session: false
 }), type2Router);
-app.use('/type3', passport.authenticate('jwt', {
+app.use(base + '/type3', passport.authenticate('jwt', {
   session: false
 }), type3Router);
 app.use('/signup', signupRouter);

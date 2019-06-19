@@ -1,5 +1,6 @@
 const debug = require('debug')('nodejs-assignment:validatelogin');
 function validate(User) {
+    //function to check if the user is present or not
     function validateLoginUser(req, res, next) {
         const {
             userEmail
@@ -15,7 +16,7 @@ function validate(User) {
             } else if (!user) {
                 debug(`user doesnt exist`);
                 res.status(400).json({
-                    message: 'User Does Not Exist',
+                    error: 'User Does Not Exist',
                 });
             } else {
                 req.found = user;

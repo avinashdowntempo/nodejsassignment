@@ -1,9 +1,9 @@
 const debug = require('debug')('nodejs-assignment:validatesignup');
 function validate(UserModel) {
+
+    //validate function to see if user is already registered with email id
     function validatesignupUser(req, res, next) {
-        const {
-            userEmail
-        } = req.body;
+        const { userEmail } = req.body;
         UserModel.findOne({
             userEmail
         }, (err, user) => {

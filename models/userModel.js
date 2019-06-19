@@ -25,6 +25,7 @@ const userModel = new Schema({
     }
 })
 
+//hast the password before saving it to DB
 userModel.pre('save', async function (next) {
     const user = this;
     const hash = await bcrypt.hash(this.password, 10);
